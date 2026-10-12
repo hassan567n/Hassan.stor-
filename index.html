@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, orientation=landscape">
+  <title>Mimic Party - أفقي بالكامل</title>
+  <style>
+    /* فرض الوضع الأفقي تماماً لكل المتصفحات والشاشات */
+    @media screen and (orientation: portrait) {
+      body {
+        transform: rotate(90deg);
+        transform-origin: left top;
+        width: 100vh;
+        height: 100vw;
+        position: absolute;
+        top: 100%;
+        left: 0;
+      }
+    }
+
+    body { 
+      font-family: system-ui, sans-serif; 
+      background: linear-gradient(135deg, #121212, #1f1f1f); 
+      color: #fff; 
+      text-align: center; 
+      padding: 10px; 
+      margin: 0; 
+      width: 100vw;
+      height: 100vh;
+      box-sizing: border-box;
+      overflow-x: hidden;
+      overflow-y: auto;
+      transition: background 1s ease; 
+    }
+    .card { background: rgba(30, 30, 30, 0.95); backdrop-filter: blur(10px); border-radius: 12px; padding: 12px; max-width: 650px; margin: 0 auto; box-shadow: 0 4px 20px rgba(0,0,0,0.7); }
+    .btn { background: #e91e63; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; margin: 5px 0; width: 100%; font-size: 1rem; transition: 0.2s; }
+    .btn:active { transform: scale(0.98); }
+    input { padding: 10px; width: 85%; border-radius: 6px; border: 1px solid #444; background: #252525; color: white; margin-bottom: 10px; text-align: center; font-size: 1rem; }
+    .hidden { display: none; }
+    .box { background: rgba(37, 37, 37, 0.9); border: 2px dashed #ff9800; padding: 8px; border-radius: 8px; margin-top: 8px; }
+    video, audio { width: 100%; max-height: 100px; border-radius: 8px; margin-top: 5px; }
+    #wheelResult { font-size: 1rem; color: #ffeb3b; font-weight: bold; margin-top: 3px; }
+    .mic-status { background: #2e7d32; padding: 5px; border-radius: 6px; margin-top: 5px; font-weight: bold; font-size: 0.85rem; }
+
+    /* شبكة اختيار الشخصيات المباشرة */
+    .avatars-grid {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .avatar-option {
+      background: #252525;
+      border: 2px solid #444;
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .avatar-option.selected {
+      border-color: #e91e63;
+      background: #3a1c2e;
+      transform: scale(1.05);
+    }
+
+    /* ساحة حركة الشخصيات بالعرض */
+    .arena {
+      background: rgba(17, 17, 17, 0.95);
+      border: 2px solid #555;
+      border-radius: 10px;
+      height: 90px;
+      position: relative;
+      margin: 8px 0;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+    }
+    .mic-icon {
+      position: absolute;
+      right: 20px;
+      font-size: 1.6rem;
+      background: #e91e63;
+      padding: 4px 8px;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #e91e63;
+    }
+    .avatar-player {
+      position: absolute;
+      left: 10px;
+      transition: left 2s cubic-bezier(0.4, 0, 0.2, 1);
+      background: #222;
+      padding: 4px 8px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      border: 2px solid #ff9800;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    }
+  </style>
+
+  <!-- مكتبات Firebase و PeerJS -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+  <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
+</head>
+<body id="pageBody">
+
+  <div class="card">
+    <h2 style="margin: 5px 0;">🎮 Mimic Party</h2>
+
+    <!-- 1. شاشة تسجيل الدخول واختيار الشخصية -->
+    <div id="loginScreen">
+      <h3 style="margin: 5px 0; font-size: 1rem;">اختر شخصيتك واكتب اسمك للبدء</h3>
+      <input type="text" id="playerNameInput" placeholder="اسمك المستعار...">
+      
+      <label style="display:block; text-align:right; font-size:0.8rem; margin-bottom:3px;">اختر الشخصية:</label>
+      <div class="avatars-grid">
+        <div class="avatar-option selected" onclick="selectAvatar('😎', this)">😎</div>
+        <div class="avatar-option" onclick="selectAvatar('🦊', this)">🦊</div>
+        <div class="avatar-option" onclick="selectAvatar('🤖', this)">🤖</div>
+        <div class="avatar-option" onclick="selectAvatar('🐱', this)">🐱</div>
+        <div class="avatar-option" onclick="selectAvatar('👑', this)">👑</div>
+      </div>
+
+      <button class="btn" onclick="loginAndRequestMic()">دخول وفتح المايك مباشرة 🎙️🚀</button>
+    </div>
+
+    <!-- 2. القائمة الرئيسية -->
+    <div id="lobbyScreen" class="hidden">
+      <h3 id="welcomeUser" style="margin: 5px 0;">أهلاً بك</h3>
+      <button class="btn" style="background: #4caf50;" onclick="createRoom()">🏠 إنشاء روم جديدة (أدمن)</button>
+      
+      <div class="box">
+        <h3 style="margin: 3px 0; font-size: 0.95rem;">🔍 انضمام للعبة</h3>
+        <input type="text" id="roomCodeInput" placeholder="أدخل كود الروم...">
+        <button class="btn" style="background: #2196f3;" onclick="searchAndJoinRoom()">بحث وانضمام 🚪</button>
+      </div>
+    </div>
+
+    <!-- 3. شاشة اللعب والساحة الأفقية التفاعلية -->
+    <div id="roomScreen" class="hidden">
+      <h3 id="roomTitle" style="margin: 3px 0;">روم رقم: ...</h3>
+      <div class="mic-status">🎙️ المحادثة الصوتية متصلة وجاهزة</div>
+
+      <div class="arena" id="arenaBox">
+        <div class="mic-icon">🎤</div>
+      </div>
+
+      <p id="playersList" style="background: rgba(42,42,42,0.8); padding: 4px; border-radius: 6px; font-size: 0.85rem; margin: 3px 0;">اللاعبون: جاري التحميل...</p>
+      
+      <div id="adminPanel" class="box" style="display: none;">
+        <h3 style="margin: 3px 0; font-size: 0.9rem;">👑 لوحة الأدمن</h3>
+        <input type="file" id="fileInput" accept="audio/*,video/*" style="margin-bottom: 5px;">
+        <button class="btn" style="padding: 6px;" onclick="uploadAndSend()">🚀 ابدأ الجولة وحرك اللاعبين</button>
+      </div>
+
+      <h3 id="challengeText" style="font-size: 0.95rem; margin: 5px 0;">بانتظار بدء التحدي...</h3>
+      <video id="videoPlayer" controls style="display:none;"></video>
+      <audio id="audioPlayer" controls style="display:none;"></audio>
+
+      <div class="box" style="border-color: #e91e63; margin-top: 5px;">
+        <h3 style="margin: 2px 0; font-size: 0.9rem;">🎡 عجلة التخريب والبونس</h3>
+        <button class="btn" style="background: #9c27b0; padding: 5px;" onclick="spinWheel()">دوران العجلة 🎯</button>
+        <div id="wheelResult">اضغط لاكتشاف مصيرك!</div>
+      </div>
+    </div>
+  </div>
+
+  <audio id="remoteAudio" autoplay style="display:none;"></audio>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDMVsgQ0PKtsLKtnSdQvCMcSvA000000",
+      authDomain: "mimic-party-95b12.firebaseapp.com",
+      databaseURL: "https://mimic-party-95b12-default-rtdb.firebaseio.com",
+      projectId: "mimic-party-95b12",
+      storageBucket: "mimic-party-95b12.appspot.com",
+      messagingSenderId: "779715969188",
+      appId: "1:779715969188:web:51a10385234be6bbbe631"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.database();
+    const storage = firebase.storage();
+
+    let currentUser = null;
+    let currentRoomId = null;
+    let isUserAdmin = false;
+    let localStream = null;
+    let peer = null;
+    let selectedAvatarEmoji = '😎';
+
+    function selectAvatar(emoji, element) {
+      document.querySelectorAll('.avatar-option').forEach(el => el.classList.remove('selected'));
+      element.classList.add('selected');
+      selectedAvatarEmoji = emoji;
+    }
+
+    function changeGameBackground(theme) {
+      const body = document.getElementById("pageBody");
+      if (theme === 'lobby') {
+        body.style.background = "linear-gradient(135deg, #121212, #1f1f1f)";
+      } else if (theme === 'moving') {
+        body.style.background = "linear-gradient(135deg, #0d1b2a, #1b263b)";
+      } else if (theme === 'challenge') {
+        body.style.background = "linear-gradient(135deg, #4a148c, #880e4f)";
+      }
+    }
+
+    // طلب إذن المايك وتجاوز قيود المتصفح بطلب مباشر عند النقر
+    async function loginAndRequestMic() {
+      const name = document.getElementById("playerNameInput").value.trim();
+      if (!name) return alert("يرجى كتابة اسمك أولاً!");
+
+      try {
+        localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+      } catch (err) {
+        alert("⚠️ يرجى السماح للبراوزر بالوصول إلى المايك لتتمكن من التحدث مع أصدقائك!");
+        return;
+      }
+
+      auth.signInAnonymously().then((userCredential) => {
+        currentUser = { uid: userCredential.user.uid, name: name, avatar: selectedAvatarEmoji };
+        
+        peer = new Peer(currentUser.uid);
+        peer.on('call', (call) => {
+          call.answer(localStream);
+          call.on('stream', (remoteStream) => {
+            const remoteAudio = document.getElementById("remoteAudio");
+            remoteAudio.srcObject = remoteStream;
+            remoteAudio.play();
+          });
+        });
+
+        document.getElementById("loginScreen").classList.add("hidden");
+        document.getElementById("lobbyScreen").classList.remove("hidden");
+        document.getElementById("welcomeUser").innerText = "أهلاً بك، " + selectedAvatarEmoji + " " + name + " 👋";
+      });
+    }
+
+    function createRoom() {
+      const roomId = Math.floor(1000 + Math.random() * 9000).toString();
+      currentRoomId = roomId;
+      isUserAdmin = true;
+
+      db.ref('rooms/' + roomId).set({
+        host: currentUser.uid,
+        players: { 
+          [currentUser.uid]: { name: currentUser.name, avatar: currentUser.avatar } 
+        }
+      }).then(() => {
+        enterRoomView(roomId);
+      });
+    }
+
+    function searchAndJoinRoom() {
+      const roomId = document.getElementById("roomCodeInput").value.trim();
+      if (!roomId) return alert("اكتب كود الروم!");
+
+      db.ref('rooms/' + roomId).once('value', (snapshot) => {
+        if (snapshot.exists()) {
+          currentRoomId = roomId;
+          db.ref('rooms/' + roomId + '/players/' + currentUser.uid).set({
+            name: currentUser.name,
+            avatar: currentUser.avatar
+          });
+
+          snapshot.child('players').forEach((childSnapshot) => {
+            const peerId = childSnapshot.key;
+            if (peerId !== currentUser.uid) {
+              connectToPeer(peerId);
+            }
+          });
+
+          enterRoomView(roomId);
+        } else {
+          alert("الروم غير موجودة!");
+        }
+      });
+    }
+
+    function connectToPeer(otherPeerId) {
+      const call = peer.call(otherPeerId, localStream);
+      if (call) {
+        call.on('stream', (remoteStream) => {
+          const remoteAudio = document.getElementById("remoteAudio");
+          remoteAudio.srcObject = remoteStream;
+          remoteAudio.play();
+        });
+      }
+    }
+
+    function enterRoomView(roomId) {
+      document.getElementById("lobbyScreen").classList.add("hidden");
+      document.getElementById("roomScreen").classList.remove("hidden");
+      document.getElementById("roomTitle").innerText = "🚪 الغرفة: " + roomId;
+
+      if (isUserAdmin) {
+        document.getElementById("adminPanel").style.display = "block";
+      }
+
+      db.ref('rooms/' + roomId + '/players').on('value', (snapshot) => {
+        const players = snapshot.val();
+        let names = [];
+        const arena = document.getElementById("arenaBox");
+        arena.innerHTML = '<div class="mic-icon">🎤</div>';
+
+        let index = 0;
+        for (let id in players) {
+          const p = players[id];
+          const pName = typeof p === 'object' ? p.name : p;
+          const pAvatar = typeof p === 'object' ? p.avatar : '👤';
+          
+          names.push(pAvatar + " " + pName);
+
+          const avatarEl = document.createElement("div");
+          avatarEl.className = "avatar-player";
+          avatarEl.style.top = (8 + (index * 25)) + "px";
+          avatarEl.style.left = "10px"; 
+          avatarEl.innerHTML = pAvatar + " " + pName;
+          arena.appendChild(avatarEl);
+          index++;
+
+          if (id !== currentUser.uid) {
+            connectToPeer(id);
+          }
+        }
+        document.getElementById("playersList").innerText = "👥 المتصلون: " + names.join(" ، ");
+      });
+
+      db.ref('rooms/' + roomId + '/currentChallenge').on('value', (snapshot) => {
+        const data = snapshot.val();
+        if (!data) return;
+
+        changeGameBackground('moving');
+
+        const allAvatars = document.querySelectorAll('.avatar-player');
+        allAvatars.forEach(av => {
+          av.style.left = "65%"; 
+        });
+
+        setTimeout(() => {
+          changeGameBackground('challenge');
+
+          const vPlayer = document.getElementById("videoPlayer");
+          const aPlayer = document.getElementById("audioPlayer");
+          document.getElementById("challengeText").innerText = "🎙️ وصلوا للمايك! استمع للتقليد الآن!";
+          
+          vPlayer.style.display = "none";
+          aPlayer.style.display = "none";
+
+          if (data.type === 'video') {
+            vPlayer.src = data.url;
+            vPlayer.style.display = "block";
+            vPlayer.play();
+          } else {
+            aPlayer.src = data.url;
+            aPlayer.style.display = "block";
+            aPlayer.play();
+          }
+        }, 2000);
+      });
+    }
+
+    async function uploadAndSend() {
+      const fileInput = document.getElementById("fileInput");
+      const file = fileInput.files[0];
+      if (!file) return alert("اختر ملف صوت أو فيديو أولاً!");
+
+      const storageRef = storage.ref('rooms/' + currentRoomId + '/' + Date.now() + '_' + file.name);
+      await storageRef.put(file);
+      const fileUrl = await storageRef.getDownloadURL();
+      const type = file.type.startsWith('video') ? 'video' : 'audio';
+
+      db.ref('rooms/' + currentRoomId + '/currentChallenge').set({
+        url: fileUrl,
+        type: type
+      });
+    }
+
+    const wheelOptions = [
+      "🔥 تخريب: قلد الصوت وأنت مغمض عيونك!",
+      "⭐ بونس: نقاطك مضاعفة هذه الجولة (x2)!",
+      "🤫 تخريب: ممنوع تستخدم أيديك نهائياً!",
+      "🛡️ بونس: حماية كاملة من العقوبة!",
+      "🤪 تخريب: قلد الصوت بصوت شخص معصب!",
+      "💧 تخريب: قلد الصوت همساً (بدون إزعاج)!"
+    ];
+
+    function spinWheel() {
+      const res = document.getElementById("wheelResult");
+      let count = 0;
+      const interval = setInterval(() => {
+        res.innerText = wheelOptions[Math.floor(Math.random() * wheelOptions.length)];
+        count++;
+        if (count > 8) {
+          clearInterval(interval);
+          const final = wheelOptions[Math.floor(Math.random() * wheelOptions.length)];
+          res.innerText = "🎯 النتيجة: " + final;
+        }
+      }, 100);
+    }
+  </script>
+</body>
+</html>
