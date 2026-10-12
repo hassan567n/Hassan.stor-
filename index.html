@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Mimic Party - التصميم المطور</title>
+  <title>Mimic Party - النسخة النهائية</title>
   <style>
     :root {
       --primary: #ff2a6d;
@@ -27,7 +27,6 @@
       overflow-y: auto;
     }
 
-    /* ملء الشاشة الأفقية بالكامل */
     .card {
       background: var(--card-bg);
       border: 1px solid rgba(255, 255, 255, 0.15);
@@ -40,11 +39,7 @@
       box-sizing: border-box;
     }
 
-    h2 {
-      margin: 2px 0 8px 0;
-      color: var(--secondary);
-      font-size: 1.5rem;
-    }
+    h2 { margin: 2px 0 8px 0; color: var(--secondary); font-size: 1.5rem; }
 
     .btn {
       background: linear-gradient(135deg, var(--primary), #d81b60);
@@ -58,12 +53,8 @@
       width: 100%;
       font-size: 1rem;
       box-shadow: 0 3px 10px rgba(255, 42, 109, 0.4);
-      transition: all 0.2s ease;
     }
-
-    .btn:active {
-      transform: scale(0.98);
-    }
+    .btn:active { transform: scale(0.98); }
 
     input {
       padding: 10px 15px;
@@ -77,27 +68,11 @@
       font-size: 0.95rem;
       outline: none;
     }
-
-    input:focus {
-      border-color: var(--secondary);
-    }
+    input:focus { border-color: var(--secondary); }
 
     .hidden { display: none; }
-
-    .box {
-      background: rgba(15, 14, 23, 0.8);
-      border: 2px dashed var(--secondary);
-      padding: 10px;
-      border-radius: 10px;
-      margin-top: 8px;
-    }
-
-    video, audio {
-      width: 100%;
-      max-height: 90px;
-      border-radius: 8px;
-      margin-top: 5px;
-    }
+    .box { background: rgba(15, 14, 23, 0.8); border: 2px dashed var(--secondary); padding: 10px; border-radius: 10px; margin-top: 8px; }
+    video, audio { width: 100%; max-height: 90px; border-radius: 8px; margin-top: 5px; }
 
     #statusMessage {
       font-size: 0.9rem;
@@ -133,7 +108,6 @@
       font-size: 1.3rem;
       cursor: pointer;
     }
-
     .avatar-option.selected {
       border-color: var(--primary);
       background: rgba(255, 42, 109, 0.3);
@@ -152,16 +126,7 @@
       align-items: center;
       padding: 0 15px;
     }
-
-    .mic-icon {
-      position: absolute;
-      right: 15px;
-      font-size: 1.5rem;
-      background: var(--primary);
-      padding: 4px 8px;
-      border-radius: 50%;
-    }
-
+    .mic-icon { position: absolute; right: 15px; font-size: 1.5rem; background: var(--primary); padding: 4px 8px; border-radius: 50%; }
     .avatar-player {
       position: absolute;
       left: 10px;
@@ -177,7 +142,6 @@
     }
   </style>
 
-  <!-- مكتبات Firebase و PeerJS -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
@@ -250,8 +214,9 @@
   <audio id="remoteAudio" autoplay style="display:none;"></audio>
 
   <script>
+    // الإعدادات المحدثة طبقاً لبيانات مشروعك الصحيحة
     const firebaseConfig = {
-      apiKey: "AIzaSyDMVsgQ0PKtsLKtnSdQvCMcSvA000000",
+      apiKey: "AIzaSyDMVsgQ0PKtsLKtnSdQvCMcSvAId-4P7C80",
       authDomain: "mimic-party-95b12.firebaseapp.com",
       databaseURL: "https://mimic-party-95b12-default-rtdb.firebaseio.com",
       projectId: "mimic-party-95b12",
@@ -289,35 +254,30 @@
         return;
       }
 
-      showStatus("جاري تفعيل المايك والاتصال...");
-
+      showStatus("جاري الاتصال باللعبة...");
       try {
         localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
-      } catch (err) {
-        console.log("Mic warning:", err);
-      }
+      } catch (err) {}
 
-      auth.signInAnonymously().catch(() => {}).finally(() => {
-        const fakeUid = 'user_' + Math.random().toString(36).substring(2, 9);
-        currentUser = { uid: auth.currentUser ? auth.currentUser.uid : fakeUid, name: name, avatar: selectedAvatarEmoji };
-        
-        try {
-          peer = new Peer(currentUser.uid);
-          peer.on('call', (call) => {
-            call.answer(localStream);
-            call.on('stream', (remoteStream) => {
-              const remoteAudio = document.getElementById("remoteAudio");
-              remoteAudio.srcObject = remoteStream;
-              remoteAudio.play();
-            });
+      const fakeUid = 'user_' + Math.random().toString(36).substring(2, 9);
+      currentUser = { uid: fakeUid, name: name, avatar: selectedAvatarEmoji };
+      
+      try {
+        peer = new Peer(currentUser.uid);
+        peer.on('call', (call) => {
+          call.answer(localStream);
+          call.on('stream', (remoteStream) => {
+            const remoteAudio = document.getElementById("remoteAudio");
+            remoteAudio.srcObject = remoteStream;
+            remoteAudio.play();
           });
-        } catch(e) {}
+        });
+      } catch(e) {}
 
-        document.getElementById("loginScreen").classList.add("hidden");
-        document.getElementById("lobbyScreen").classList.remove("hidden");
-        document.getElementById("welcomeUser").innerText = "أهلاً بك، " + selectedAvatarEmoji + " " + name + " 👋";
-        showStatus("");
-      });
+      document.getElementById("loginScreen").classList.add("hidden");
+      document.getElementById("lobbyScreen").classList.remove("hidden");
+      document.getElementById("welcomeUser").innerText = "أهلاً بك، " + selectedAvatarEmoji + " " + name + " 👋";
+      showStatus("");
     }
 
     function createRoom() {
@@ -325,17 +285,17 @@
       currentRoomId = roomId;
       isUserAdmin = true;
 
-      showStatus("جاري إنشاء الروم...");
+      showStatus("جاري فتح الروم...");
       db.ref('rooms/' + roomId).set({
         host: currentUser.uid,
         players: { 
           [currentUser.uid]: { name: currentUser.name, avatar: currentUser.avatar } 
         }
-      }).then(() => {
-        enterRoomView(roomId);
-      }).catch(err => {
-        showStatus("❌ فشل إنشاء الروم، تحقق من الاتصال");
       });
+
+      setTimeout(() => {
+        enterRoomView(roomId);
+      }, 300);
     }
 
     function searchAndJoinRoom() {
@@ -345,26 +305,23 @@
         return;
       }
 
-      showStatus("جاري البحث عن الروم...");
+      showStatus("جاري الدخول للروم...");
       db.ref('rooms/' + roomId).once('value', (snapshot) => {
-        if (snapshot.exists()) {
-          currentRoomId = roomId;
-          db.ref('rooms/' + roomId + '/players/' + currentUser.uid).set({
-            name: currentUser.name,
-            avatar: currentUser.avatar
-          });
+        currentRoomId = roomId;
+        db.ref('rooms/' + roomId + '/players/' + currentUser.uid).set({
+          name: currentUser.name,
+          avatar: currentUser.avatar
+        });
 
+        if (snapshot.exists() && snapshot.val().players) {
           snapshot.child('players').forEach((childSnapshot) => {
             const peerId = childSnapshot.key;
             if (peerId !== currentUser.uid) {
               connectToPeer(peerId);
             }
           });
-
-          enterRoomView(roomId);
-        } else {
-          showStatus("❌ الروم غير موجودة!");
         }
+        enterRoomView(roomId);
       });
     }
 
@@ -460,7 +417,7 @@
         return;
       }
 
-      showStatus("جاري رفع الملف...");
+      showStatus("جاري إرسال التحدي...");
       const storageRef = storage.ref('rooms/' + currentRoomId + '/' + Date.now() + '_' + file.name);
       await storageRef.put(file);
       const fileUrl = await storageRef.getDownloadURL();
