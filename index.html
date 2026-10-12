@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Mimic Party - النسخة النهائية</title>
+  <title>Mimic Party - رفع 6 أصوات في اللوبي</title>
   <style>
     :root {
       --primary: #ff2a6d;
@@ -31,7 +31,7 @@
       background: var(--card-bg);
       border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 14px;
-      padding: 12px 20px;
+      padding: 10px 15px;
       width: 96vw;
       max-width: 950px;
       margin: 5px auto;
@@ -39,73 +39,114 @@
       box-sizing: border-box;
     }
 
-    h2 { margin: 2px 0 8px 0; color: var(--secondary); font-size: 1.5rem; }
+    h2 { margin: 2px 0 6px 0; color: var(--secondary); font-size: 1.3rem; }
 
     .btn {
       background: linear-gradient(135deg, var(--primary), #d81b60);
       color: white;
       border: none;
-      padding: 10px 20px;
-      border-radius: 10px;
+      padding: 8px 14px;
+      border-radius: 8px;
       font-weight: bold;
       cursor: pointer;
-      margin: 5px 0;
+      margin: 4px 0;
       width: 100%;
-      font-size: 1rem;
+      font-size: 0.9rem;
       box-shadow: 0 3px 10px rgba(255, 42, 109, 0.4);
     }
     .btn:active { transform: scale(0.98); }
 
     input {
-      padding: 10px 15px;
+      padding: 6px 10px;
       width: 80%;
       border-radius: 8px;
       border: 2px solid rgba(255, 255, 255, 0.2);
       background: rgba(10, 9, 15, 0.9);
       color: white;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       text-align: center;
-      font-size: 0.95rem;
+      font-size: 0.85rem;
       outline: none;
     }
-    input:focus { border-color: var(--secondary); }
 
     .hidden { display: none; }
-    .box { background: rgba(15, 14, 23, 0.8); border: 2px dashed var(--secondary); padding: 10px; border-radius: 10px; margin-top: 8px; }
-    video, audio { width: 100%; max-height: 90px; border-radius: 8px; margin-top: 5px; }
+    .box { background: rgba(15, 14, 23, 0.8); border: 2px dashed var(--secondary); padding: 8px; border-radius: 10px; margin-top: 6px; }
+    video, audio { width: 100%; max-height: 70px; border-radius: 8px; margin-top: 4px; }
 
     #statusMessage {
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       color: #ff9800;
       font-weight: bold;
-      margin: 4px 0;
-      min-height: 20px;
+      margin: 2px 0;
+      min-height: 16px;
     }
 
     .mic-status {
       background: rgba(46, 125, 50, 0.4);
       border: 1px solid #4caf50;
-      padding: 5px;
+      padding: 4px;
       border-radius: 6px;
-      margin: 4px 0;
+      margin: 3px 0;
       font-weight: bold;
-      font-size: 0.85rem;
+      font-size: 0.75rem;
       color: #81c784;
+    }
+
+    .round-indicator {
+      background: linear-gradient(135deg, #7c4dff, #b388ff);
+      color: #fff;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 0.8rem;
+      display: inline-block;
+    }
+
+    /* شبكة رفع الأصوات باللوبي */
+    .upload-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+      text-align: right;
+      font-size: 0.75rem;
+      margin: 6px 0;
+    }
+
+    /* شبكة اختيار أصوات الجولات للأدمن داخل الجيم */
+    .sounds-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin: 6px 0;
+    }
+    .sound-btn {
+      background: rgba(5, 217, 232, 0.15);
+      border: 1px solid var(--secondary);
+      color: #fff;
+      padding: 6px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.2s;
+    }
+    .sound-btn:hover {
+      background: var(--secondary);
+      color: #000;
     }
 
     .avatars-grid {
       display: flex;
       justify-content: center;
-      gap: 10px;
-      margin-bottom: 8px;
+      gap: 8px;
+      margin-bottom: 6px;
     }
-
     .avatar-option {
       background: rgba(255, 255, 255, 0.05);
       border: 2px solid rgba(255, 255, 255, 0.15);
-      border-radius: 10px;
-      padding: 6px 10px;
-      font-size: 1.3rem;
+      border-radius: 8px;
+      padding: 4px 8px;
+      font-size: 1.1rem;
       cursor: pointer;
     }
     .avatar-option.selected {
@@ -117,28 +158,28 @@
     .arena {
       background: rgba(8, 7, 12, 0.95);
       border: 2px solid rgba(5, 217, 232, 0.4);
-      border-radius: 12px;
-      height: 80px;
+      border-radius: 10px;
+      height: 70px;
       position: relative;
-      margin: 6px 0;
+      margin: 4px 0;
       overflow: hidden;
       display: flex;
       align-items: center;
       padding: 0 15px;
     }
-    .mic-icon { position: absolute; right: 15px; font-size: 1.5rem; background: var(--primary); padding: 4px 8px; border-radius: 50%; }
+    .mic-icon { position: absolute; right: 15px; font-size: 1.3rem; background: var(--primary); padding: 3px 6px; border-radius: 50%; }
     .avatar-player {
       position: absolute;
       left: 10px;
       transition: left 2s cubic-bezier(0.4, 0, 0.2, 1);
       background: rgba(25, 22, 40, 0.95);
-      padding: 4px 10px;
-      border-radius: 15px;
-      font-size: 0.8rem;
+      padding: 2px 6px;
+      border-radius: 12px;
+      font-size: 0.7rem;
       border: 2px solid var(--secondary);
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 3px;
     }
   </style>
 
@@ -156,7 +197,7 @@
 
     <!-- 1. شاشة تسجيل الدخول -->
     <div id="loginScreen">
-      <h3 style="margin: 2px 0 8px 0; font-size: 0.95rem; color: #a7a9be;">اختر شخصيتك واكتب اسمك للبدء</h3>
+      <h3 style="margin: 2px 0 6px 0; font-size: 0.9rem; color: #a7a9be;">اختر شخصيتك واكتب اسمك للبدء</h3>
       <input type="text" id="playerNameInput" placeholder="اسمك المستعار...">
       
       <div class="avatars-grid">
@@ -170,13 +211,27 @@
       <button class="btn" onclick="loginAndRequestMic()">دخول وفتح المايك 🎙️✨</button>
     </div>
 
-    <!-- 2. القائمة الرئيسية -->
+    <!-- 2. القائمة الرئيسية (اللوبي) -->
     <div id="lobbyScreen" class="hidden">
-      <h3 id="welcomeUser" style="margin: 5px 0; color: var(--secondary);">أهلاً بك</h3>
+      <h3 id="welcomeUser" style="margin: 4px 0; color: var(--secondary);">أهلاً بك</h3>
       <button class="btn" style="background: linear-gradient(135deg, #00b0ff, #00e676);" onclick="createRoom()">🏠 إنشاء روم جديدة (أدمن)</button>
-      
+
+      <!-- لوحة تحكم للأدمن باللوبي لرفع 6 أصوات -->
+      <div id="lobbyAdminUpload" class="box" style="display: none;">
+        <h3 style="margin: 2px 0; font-size: 0.85rem; color: var(--primary);">👑 لوحة تحكم الأدمن: ارفع 6 أصوات للجولات</h3>
+        <div class="upload-grid">
+          <div><label>صوت 1 🐶:</label><input type="file" id="sound1" accept="audio/*"></div>
+          <div><label>صوت 2 🐱:</label><input type="file" id="sound2" accept="audio/*"></div>
+          <div><label>صوت 3 🦁:</label><input type="file" id="sound3" accept="audio/*"></div>
+          <div><label>صوت 4 🐵:</label><input type="file" id="sound4" accept="audio/*"></div>
+          <div><label>صوت 5 🐮:</label><input type="file" id="sound5" accept="audio/*"></div>
+          <div><label>صوت 6 🐸:</label><input type="file" id="sound6" accept="audio/*"></div>
+        </div>
+        <button class="btn" style="padding: 5px; background: #ff9100;" onclick="upload6Sounds()">حفظ ونشر الأصوات للروم 📤</button>
+      </div>
+
       <div class="box">
-        <h3 style="margin: 3px 0; font-size: 0.95rem; color: var(--text-color);">🔍 انضمام للعبة</h3>
+        <h3 style="margin: 2px 0; font-size: 0.85rem; color: var(--text-color);">🔍 انضمام للعبة</h3>
         <input type="text" id="roomCodeInput" placeholder="أدخل كود الروم (4 أرقام)...">
         <button class="btn" style="background: linear-gradient(135deg, #7c4dff, #b388ff);" onclick="searchAndJoinRoom()">بحث وانضمام 🚪</button>
       </div>
@@ -184,29 +239,40 @@
 
     <!-- 3. شاشة اللعب والساحة -->
     <div id="roomScreen" class="hidden">
-      <h3 id="roomTitle" style="margin: 2px 0; color: var(--secondary);">روم رقم: ...</h3>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
+        <h3 id="roomTitle" style="margin: 0; color: var(--secondary); font-size: 0.95rem;">🚪 الغرفة: ...</h3>
+        <div class="round-indicator" id="roundIndicator">الجولة: 1 / 6</div>
+      </div>
+
       <div class="mic-status">🎙️ المحادثة الصوتية متصلة وجاهزة</div>
 
       <div class="arena" id="arenaBox">
         <div class="mic-icon">🎤</div>
       </div>
 
-      <p id="playersList" style="background: rgba(15, 14, 23, 0.8); padding: 4px; border-radius: 8px; font-size: 0.85rem; margin: 4px 0;">اللاعبون: جاري التحميل...</p>
+      <p id="playersList" style="background: rgba(15, 14, 23, 0.8); padding: 3px; border-radius: 6px; font-size: 0.75rem; margin: 3px 0;">اللاعبون: جاري التحميل...</p>
       
+      <!-- لوحة الأدمن داخل الجيم لاختيار صوت من الأصوات المرفوعة -->
       <div id="adminPanel" class="box" style="display: none;">
-        <h3 style="margin: 2px 0; font-size: 0.9rem; color: var(--primary);">👑 لوحة التحكم للأدمن</h3>
-        <input type="file" id="fileInput" accept="audio/*,video/*" style="margin-bottom: 4px; width: 85%;">
-        <button class="btn" style="padding: 6px; background: linear-gradient(135deg, #ff9100, #ffea00); color: #000;" onclick="uploadAndSend()">🚀 ابدأ الجولة وحرك اللاعبين</button>
+        <h3 style="margin: 2px 0; font-size: 0.8rem; color: var(--primary);">👑 اختر صوت الجولة من الأصوات المرفوعة:</h3>
+        <div class="sounds-grid">
+          <button class="sound-btn" onclick="playSelectedRoundSound(1)">صوت 1 🐶</button>
+          <button class="sound-btn" onclick="playSelectedRoundSound(2)">صوت 2 🐱</button>
+          <button class="sound-btn" onclick="playSelectedRoundSound(3)">صوت 3 🦁</button>
+          <button class="sound-btn" onclick="playSelectedRoundSound(4)">صوت 4 🐵</button>
+          <button class="sound-btn" onclick="playSelectedRoundSound(5)">صوت 5 🐮</button>
+          <button class="sound-btn" onclick="playSelectedRoundSound(6)">صوت 6 🐸</button>
+        </div>
       </div>
 
-      <h3 id="challengeText" style="font-size: 0.9rem; margin: 6px 0; color: #ffeb3b;">بانتظار بدء التحدي...</h3>
-      <video id="videoPlayer" controls style="display:none;"></video>
+      <h3 id="challengeText" style="font-size: 0.8rem; margin: 3px 0; color: #ffeb3b;">بانتظار تشغيل الأدمن لصوت الجولة...</h3>
       <audio id="audioPlayer" controls style="display:none;"></audio>
 
-      <div class="box" style="border-color: var(--primary); margin-top: 6px;">
-        <h3 style="margin: 2px 0; font-size: 0.9rem; color: var(--primary);">🎡 عجلة التخريب والبونس</h3>
-        <button class="btn" style="background: linear-gradient(135deg, #ab47bc, #7b1fa2); padding: 5px;" onclick="spinWheel()">دوران العجلة 🎯</button>
-        <div id="wheelResult">اضغط لاكتشاف مصيرك!</div>
+      <!-- عجلة الحظ الكبرى في نهاية الـ 6 جولات -->
+      <div id="wheelSection" class="box" style="border-color: var(--primary); margin-top: 4px; display: none;">
+        <h3 style="margin: 2px 0; font-size: 0.85rem; color: var(--primary);">🎡 عجلة الحظ الكبرى (نهاية الـ 6 جولات)</h3>
+        <button class="btn" style="background: linear-gradient(135deg, #ab47bc, #7b1fa2); padding: 4px;" onclick="spinWheel()">دوران العجلة الكبرى 🎯</button>
+        <div id="wheelResult" style="font-size: 0.85rem;">اضغط لاكتشاف مصير الختام!</div>
       </div>
     </div>
   </div>
@@ -214,7 +280,6 @@
   <audio id="remoteAudio" autoplay style="display:none;"></audio>
 
   <script>
-    // الإعدادات المحدثة طبقاً لبيانات مشروعك الصحيحة
     const firebaseConfig = {
       apiKey: "AIzaSyDMVsgQ0PKtsLKtnSdQvCMcSvAId-4P7C80",
       authDomain: "mimic-party-95b12.firebaseapp.com",
@@ -236,6 +301,8 @@
     let localStream = null;
     let peer = null;
     let selectedAvatarEmoji = '😎';
+    let currentRound = 1;
+    let uploadedSounds = {};
 
     function showStatus(msg) {
       document.getElementById("statusMessage").innerText = msg;
@@ -288,14 +355,31 @@
       showStatus("جاري فتح الروم...");
       db.ref('rooms/' + roomId).set({
         host: currentUser.uid,
+        round: 1,
         players: { 
           [currentUser.uid]: { name: currentUser.name, avatar: currentUser.avatar } 
         }
       });
 
+      document.getElementById("lobbyAdminUpload").style.display = "block";
       setTimeout(() => {
         enterRoomView(roomId);
       }, 300);
+    }
+
+    async function upload6Sounds() {
+      showStatus("جاري رفع الأصوات للروم...");
+      for (let i = 1; i <= 6; i++) {
+        const fileInput = document.getElementById('sound' + i);
+        if (fileInput.files[0]) {
+          const file = fileInput.files[0];
+          const storageRef = storage.ref('rooms/' + currentRoomId + '/sound_' + i);
+          await storageRef.put(file);
+          const url = await storageRef.getDownloadURL();
+          db.ref('rooms/' + currentRoomId + '/sounds/' + i).set(url);
+        }
+      }
+      showStatus("✅ تم حفظ الأصوات بنجاح!");
     }
 
     function searchAndJoinRoom() {
@@ -349,6 +433,19 @@
         document.getElementById("adminPanel").style.display = "block";
       }
 
+      db.ref('rooms/' + roomId + '/round').on('value', (snapshot) => {
+        if (snapshot.exists()) {
+          currentRound = snapshot.val();
+          if (currentRound <= 6) {
+            document.getElementById("roundIndicator").innerText = "الجولة: " + currentRound + " / 6";
+            document.getElementById("wheelSection").style.display = "none";
+          } else {
+            document.getElementById("roundIndicator").innerText = "🏆 المرحلة الختامية";
+            document.getElementById("wheelSection").style.display = "block";
+          }
+        }
+      });
+
       db.ref('rooms/' + roomId + '/players').on('value', (snapshot) => {
         const players = snapshot.val();
         if (!players) return;
@@ -366,7 +463,7 @@
 
           const avatarEl = document.createElement("div");
           avatarEl.className = "avatar-player";
-          avatarEl.style.top = (6 + (index * 22)) + "px";
+          avatarEl.style.top = (4 + (index * 18)) + "px";
           avatarEl.style.left = "10px"; 
           avatarEl.innerHTML = pAvatar + " " + pName;
           arena.appendChild(avatarEl);
@@ -379,64 +476,48 @@
         document.getElementById("playersList").innerText = "👥 المتصلون: " + names.join(" ، ");
       });
 
-      db.ref('rooms/' + roomId + '/currentChallenge').on('value', (snapshot) => {
-        const data = snapshot.val();
-        if (!data) return;
+      // تشغيل الصوت المباشر في الجولة
+      db.ref('rooms/' + roomId + '/currentSoundUrl').on('value', (snapshot) => {
+        const url = snapshot.val();
+        if (!url) return;
 
         const allAvatars = document.querySelectorAll('.avatar-player');
         allAvatars.forEach(av => {
-          av.style.left = "62%"; 
+          av.style.left = "62px"; 
         });
 
         setTimeout(() => {
-          const vPlayer = document.getElementById("videoPlayer");
+          document.getElementById("challengeText").innerText = "🎙️ استمع للحيوان/الصوت وقلده الآن!";
           const aPlayer = document.getElementById("audioPlayer");
-          document.getElementById("challengeText").innerText = "🎙️ وصلوا للمايك! استمع للتقليد الآن!";
-          
-          vPlayer.style.display = "none";
-          aPlayer.style.display = "none";
-
-          if (data.type === 'video') {
-            vPlayer.src = data.url;
-            vPlayer.style.display = "block";
-            vPlayer.play();
-          } else {
-            aPlayer.src = data.url;
-            aPlayer.style.display = "block";
-            aPlayer.play();
-          }
-        }, 2000);
+          aPlayer.src = url;
+          aPlayer.style.display = "block";
+          aPlayer.play();
+        }, 1500);
       });
     }
 
-    async function uploadAndSend() {
-      const fileInput = document.getElementById("fileInput");
-      const file = fileInput.files[0];
-      if (!file) {
-        showStatus("⚠️ اختر ملف صوت أو فيديو أولاً!");
-        return;
-      }
-
-      showStatus("جاري إرسال التحدي...");
-      const storageRef = storage.ref('rooms/' + currentRoomId + '/' + Date.now() + '_' + file.name);
-      await storageRef.put(file);
-      const fileUrl = await storageRef.getDownloadURL();
-      const type = file.type.startsWith('video') ? 'video' : 'audio';
-
-      db.ref('rooms/' + currentRoomId + '/currentChallenge').set({
-        url: fileUrl,
-        type: type
+    function playSelectedRoundSound(soundIndex) {
+      db.ref('rooms/' + currentRoomId + '/sounds/' + soundIndex).once('value', (snapshot) => {
+        const soundUrl = snapshot.val();
+        if (soundUrl) {
+          db.ref('rooms/' + currentRoomId).update({
+            round: soundIndex,
+            currentSoundUrl: soundUrl
+          });
+          showStatus("🚀 تم تشغيل الصوت " + soundIndex + " للجميع!");
+        } else {
+          showStatus("⚠️ لم يتم رفع هذا الصوت بعد في اللوبي!");
+        }
       });
-      showStatus("🚀 تم إرسال التحدي للجميع!");
     }
 
     const wheelOptions = [
-      "🔥 تخريب: قلد الصوت وأنت مغمض عيونك!",
-      "⭐ بونس: نقاطك مضاعفة هذه الجولة (x2)!",
-      "🤫 تخريب: ممنوع تستخدم أيديك نهائياً!",
-      "🛡️ بونس: حماية كاملة من العقوبة!",
-      "🤪 تخريب: قلد الصوت بصوت شخص معصب!",
-      "💧 تخريب: قلد الصوت همساً (بدون إزعاج)!"
+      "🔥 تخريب كلي: قلد الصوت وأنت مغمض عيونك!",
+      "⭐ بونس أسطوري: نقاط الفريق مضاعفة (x3)!",
+      "🤫 تخريب صامت: ممنوع استخدام اليدين نهائياً!",
+      "🛡️ درع حماية: إعفاء كامل من العقوبة!",
+      "🤪 تخريب مجنون: قلد الصوت بصوت شخص معصب جداً!",
+      "💧 تحدي الهامس: قلد الصوت همساً بدون إزعاج!"
     ];
 
     function spinWheel() {
@@ -445,12 +526,12 @@
       const interval = setInterval(() => {
         res.innerText = wheelOptions[Math.floor(Math.random() * wheelOptions.length)];
         count++;
-        if (count > 8) {
+        if (count > 10) {
           clearInterval(interval);
           const final = wheelOptions[Math.floor(Math.random() * wheelOptions.length)];
-          res.innerText = "🎯 النتيجة: " + final;
+          res.innerText = "🎯 النتيجة النهائية: " + final;
         }
-      }, 80);
+      }, 70);
     }
   </script>
 </body>
