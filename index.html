@@ -3,23 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Mimic Party - التصميم الجديد</title>
+  <title>Mimic Party - التصميم المطور</title>
   <style>
     :root {
       --primary: #ff2a6d;
       --secondary: #05d9e8;
-      --dark-bg: #0f0e17;
-      --card-bg: rgba(24, 22, 37, 0.85);
+      --dark-bg: #0b0a10;
+      --card-bg: rgba(18, 16, 28, 0.95);
       --text-color: #fffffe;
     }
 
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: var(--dark-bg);
-      background-image: radial-gradient(circle at 50% 50%, #1a153b 0%, #0f0e17 100%);
       color: var(--text-color);
       text-align: center;
-      padding: 10px;
+      padding: 5px;
       margin: 0;
       width: 100vw;
       height: 100vh;
@@ -28,56 +27,55 @@
       overflow-y: auto;
     }
 
+    /* ملء الشاشة الأفقية بالكامل */
     .card {
       background: var(--card-bg);
-      backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 20px;
-      padding: 20px;
-      max-width: 700px;
-      margin: 15px auto;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 14px;
+      padding: 12px 20px;
+      width: 96vw;
+      max-width: 950px;
+      margin: 5px auto;
+      box-shadow: 0 5px 25px rgba(0, 0, 0, 0.9);
+      box-sizing: border-box;
     }
 
     h2 {
-      margin: 5px 0 15px 0;
+      margin: 2px 0 8px 0;
       color: var(--secondary);
-      text-shadow: 0 0 10px rgba(5, 217, 232, 0.4);
-      font-size: 1.8rem;
-      letter-spacing: 1px;
+      font-size: 1.5rem;
     }
 
     .btn {
       background: linear-gradient(135deg, var(--primary), #d81b60);
       color: white;
       border: none;
-      padding: 12px 24px;
-      border-radius: 12px;
+      padding: 10px 20px;
+      border-radius: 10px;
       font-weight: bold;
       cursor: pointer;
-      margin: 8px 0;
+      margin: 5px 0;
       width: 100%;
-      font-size: 1.1rem;
-      box-shadow: 0 4px 15px rgba(255, 42, 109, 0.4);
-      transition: all 0.3s ease;
+      font-size: 1rem;
+      box-shadow: 0 3px 10px rgba(255, 42, 109, 0.4);
+      transition: all 0.2s ease;
     }
 
     .btn:active {
-      transform: scale(0.97);
+      transform: scale(0.98);
     }
 
     input {
-      padding: 12px 15px;
-      width: 85%;
-      border-radius: 10px;
-      border: 2px solid rgba(255, 255, 255, 0.1);
-      background: rgba(15, 14, 23, 0.8);
+      padding: 10px 15px;
+      width: 80%;
+      border-radius: 8px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      background: rgba(10, 9, 15, 0.9);
       color: white;
-      margin-bottom: 15px;
+      margin-bottom: 8px;
       text-align: center;
-      font-size: 1rem;
+      font-size: 0.95rem;
       outline: none;
-      transition: border-color 0.3s;
     }
 
     input:focus {
@@ -87,102 +85,95 @@
     .hidden { display: none; }
 
     .box {
-      background: rgba(15, 14, 23, 0.6);
+      background: rgba(15, 14, 23, 0.8);
       border: 2px dashed var(--secondary);
-      padding: 15px;
-      border-radius: 14px;
-      margin-top: 15px;
+      padding: 10px;
+      border-radius: 10px;
+      margin-top: 8px;
     }
 
     video, audio {
       width: 100%;
-      max-height: 120px;
-      border-radius: 10px;
-      margin-top: 10px;
+      max-height: 90px;
+      border-radius: 8px;
+      margin-top: 5px;
     }
 
-    #wheelResult {
-      font-size: 1.2rem;
-      color: #ffeb3b;
+    #statusMessage {
+      font-size: 0.9rem;
+      color: #ff9800;
       font-weight: bold;
-      margin-top: 8px;
-      text-shadow: 0 0 8px rgba(255, 235, 59, 0.4);
+      margin: 4px 0;
+      min-height: 20px;
     }
 
     .mic-status {
-      background: rgba(46, 125, 50, 0.3);
+      background: rgba(46, 125, 50, 0.4);
       border: 1px solid #4caf50;
-      padding: 8px;
-      border-radius: 8px;
-      margin-top: 8px;
+      padding: 5px;
+      border-radius: 6px;
+      margin: 4px 0;
       font-weight: bold;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: #81c784;
     }
 
-    /* شبكة اختيار الشخصيات بتصميم راقي */
     .avatars-grid {
       display: flex;
       justify-content: center;
-      gap: 12px;
-      margin-bottom: 15px;
+      gap: 10px;
+      margin-bottom: 8px;
     }
 
     .avatar-option {
       background: rgba(255, 255, 255, 0.05);
-      border: 2px solid rgba(255, 255, 255, 0.1);
-      border-radius: 14px;
-      padding: 10px 14px;
-      font-size: 1.5rem;
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      padding: 6px 10px;
+      font-size: 1.3rem;
       cursor: pointer;
-      transition: all 0.3s ease;
     }
 
     .avatar-option.selected {
       border-color: var(--primary);
-      background: rgba(255, 42, 109, 0.2);
-      transform: translateY(-4px);
-      box-shadow: 0 5px 15px rgba(255, 42, 109, 0.4);
+      background: rgba(255, 42, 109, 0.3);
+      transform: scale(1.05);
     }
 
-    /* ساحة حركة الشخصيات الأفقية الفخمة */
     .arena {
-      background: rgba(10, 9, 15, 0.9);
-      border: 2px solid rgba(5, 217, 232, 0.3);
-      border-radius: 16px;
-      height: 100px;
+      background: rgba(8, 7, 12, 0.95);
+      border: 2px solid rgba(5, 217, 232, 0.4);
+      border-radius: 12px;
+      height: 80px;
       position: relative;
-      margin: 12px 0;
+      margin: 6px 0;
       overflow: hidden;
       display: flex;
       align-items: center;
-      padding: 0 20px;
-      box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+      padding: 0 15px;
     }
 
     .mic-icon {
       position: absolute;
-      right: 20px;
-      font-size: 1.8rem;
+      right: 15px;
+      font-size: 1.5rem;
       background: var(--primary);
-      padding: 6px 10px;
+      padding: 4px 8px;
       border-radius: 50%;
-      box-shadow: 0 0 15px var(--primary);
     }
 
     .avatar-player {
       position: absolute;
-      left: 15px;
+      left: 10px;
       transition: left 2s cubic-bezier(0.4, 0, 0.2, 1);
-      background: rgba(30, 27, 48, 0.9);
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-size: 0.85rem;
+      background: rgba(25, 22, 40, 0.95);
+      padding: 4px 10px;
+      border-radius: 15px;
+      font-size: 0.8rem;
       border: 2px solid var(--secondary);
       display: flex;
       align-items: center;
-      gap: 6px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      gap: 5px;
     }
   </style>
 
@@ -193,17 +184,17 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
   <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
 </head>
-<body id="pageBody">
+<body>
 
   <div class="card">
     <h2>🎮 MIMIC PARTY</h2>
+    <div id="statusMessage"></div>
 
     <!-- 1. شاشة تسجيل الدخول -->
     <div id="loginScreen">
-      <h3 style="margin: 5px 0 15px 0; font-size: 1.1rem; color: #a7a9be;">اختر شخصيتك واكتب اسمك المميز للبدء</h3>
+      <h3 style="margin: 2px 0 8px 0; font-size: 0.95rem; color: #a7a9be;">اختر شخصيتك واكتب اسمك للبدء</h3>
       <input type="text" id="playerNameInput" placeholder="اسمك المستعار...">
       
-      <label style="display:block; text-align:right; font-size:0.9rem; margin-bottom:8px; color: var(--secondary);">اختر الأفاتار:</label>
       <div class="avatars-grid">
         <div class="avatar-option selected" onclick="selectAvatar('😎', this)">😎</div>
         <div class="avatar-option" onclick="selectAvatar('🦊', this)">🦊</div>
@@ -217,40 +208,40 @@
 
     <!-- 2. القائمة الرئيسية -->
     <div id="lobbyScreen" class="hidden">
-      <h3 id="welcomeUser" style="margin: 10px 0; color: var(--secondary);">أهلاً بك</h3>
+      <h3 id="welcomeUser" style="margin: 5px 0; color: var(--secondary);">أهلاً بك</h3>
       <button class="btn" style="background: linear-gradient(135deg, #00b0ff, #00e676);" onclick="createRoom()">🏠 إنشاء روم جديدة (أدمن)</button>
       
       <div class="box">
-        <h3 style="margin: 5px 0; font-size: 1rem; color: var(--text-color);">🔍 انضمام للعبة</h3>
+        <h3 style="margin: 3px 0; font-size: 0.95rem; color: var(--text-color);">🔍 انضمام للعبة</h3>
         <input type="text" id="roomCodeInput" placeholder="أدخل كود الروم (4 أرقام)...">
         <button class="btn" style="background: linear-gradient(135deg, #7c4dff, #b388ff);" onclick="searchAndJoinRoom()">بحث وانضمام 🚪</button>
       </div>
     </div>
 
-    <!-- 3. شاشة اللعب والساحة التفاعلية -->
+    <!-- 3. شاشة اللعب والساحة -->
     <div id="roomScreen" class="hidden">
-      <h3 id="roomTitle" style="margin: 5px 0; color: var(--secondary);">روم رقم: ...</h3>
-      <div class="mic-status">🎙️ المحادثة الصوتية متصلة وجاهزة للحديث</div>
+      <h3 id="roomTitle" style="margin: 2px 0; color: var(--secondary);">روم رقم: ...</h3>
+      <div class="mic-status">🎙️ المحادثة الصوتية متصلة وجاهزة</div>
 
       <div class="arena" id="arenaBox">
         <div class="mic-icon">🎤</div>
       </div>
 
-      <p id="playersList" style="background: rgba(15, 14, 23, 0.6); padding: 8px; border-radius: 10px; font-size: 0.9rem; margin: 8px 0; border: 1px solid rgba(255,255,255,0.05);">اللاعبون: جاري التحميل...</p>
+      <p id="playersList" style="background: rgba(15, 14, 23, 0.8); padding: 4px; border-radius: 8px; font-size: 0.85rem; margin: 4px 0;">اللاعبون: جاري التحميل...</p>
       
       <div id="adminPanel" class="box" style="display: none;">
-        <h3 style="margin: 5px 0; font-size: 1rem; color: var(--primary);">👑 لوحة التحكم بالأدمن</h3>
-        <input type="file" id="fileInput" accept="audio/*,video/*" style="margin-bottom: 8px; width: 90%;">
-        <button class="btn" style="padding: 10px; background: linear-gradient(135deg, #ff9100, #ffea00); color: #000;" onclick="uploadAndSend()">🚀 ابدأ الجولة وحرك اللاعبين</button>
+        <h3 style="margin: 2px 0; font-size: 0.9rem; color: var(--primary);">👑 لوحة التحكم للأدمن</h3>
+        <input type="file" id="fileInput" accept="audio/*,video/*" style="margin-bottom: 4px; width: 85%;">
+        <button class="btn" style="padding: 6px; background: linear-gradient(135deg, #ff9100, #ffea00); color: #000;" onclick="uploadAndSend()">🚀 ابدأ الجولة وحرك اللاعبين</button>
       </div>
 
-      <h3 id="challengeText" style="font-size: 1rem; margin: 10px 0; color: #ffeb3b;">بانتظار بدء التحدي...</h3>
+      <h3 id="challengeText" style="font-size: 0.9rem; margin: 6px 0; color: #ffeb3b;">بانتظار بدء التحدي...</h3>
       <video id="videoPlayer" controls style="display:none;"></video>
       <audio id="audioPlayer" controls style="display:none;"></audio>
 
-      <div class="box" style="border-color: var(--primary); margin-top: 10px;">
-        <h3 style="margin: 5px 0; font-size: 1rem; color: var(--primary);">🎡 عجلة التخريب والبونس</h3>
-        <button class="btn" style="background: linear-gradient(135deg, #ab47bc, #7b1fa2); padding: 8px;" onclick="spinWheel()">دوران العجلة 🎯</button>
+      <div class="box" style="border-color: var(--primary); margin-top: 6px;">
+        <h3 style="margin: 2px 0; font-size: 0.9rem; color: var(--primary);">🎡 عجلة التخريب والبونس</h3>
+        <button class="btn" style="background: linear-gradient(135deg, #ab47bc, #7b1fa2); padding: 5px;" onclick="spinWheel()">دوران العجلة 🎯</button>
         <div id="wheelResult">اضغط لاكتشاف مصيرك!</div>
       </div>
     </div>
@@ -281,6 +272,10 @@
     let peer = null;
     let selectedAvatarEmoji = '😎';
 
+    function showStatus(msg) {
+      document.getElementById("statusMessage").innerText = msg;
+    }
+
     function selectAvatar(emoji, element) {
       document.querySelectorAll('.avatar-option').forEach(el => el.classList.remove('selected'));
       element.classList.add('selected');
@@ -289,7 +284,12 @@
 
     async function loginAndRequestMic() {
       const name = document.getElementById("playerNameInput").value.trim();
-      if (!name) return alert("يرجى كتابة اسمك أولاً!");
+      if (!name) {
+        showStatus("⚠️ يرجى كتابة اسمك أولاً!");
+        return;
+      }
+
+      showStatus("جاري تفعيل المايك والاتصال...");
 
       try {
         localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
@@ -316,6 +316,7 @@
         document.getElementById("loginScreen").classList.add("hidden");
         document.getElementById("lobbyScreen").classList.remove("hidden");
         document.getElementById("welcomeUser").innerText = "أهلاً بك، " + selectedAvatarEmoji + " " + name + " 👋";
+        showStatus("");
       });
     }
 
@@ -324,6 +325,7 @@
       currentRoomId = roomId;
       isUserAdmin = true;
 
+      showStatus("جاري إنشاء الروم...");
       db.ref('rooms/' + roomId).set({
         host: currentUser.uid,
         players: { 
@@ -331,13 +333,19 @@
         }
       }).then(() => {
         enterRoomView(roomId);
+      }).catch(err => {
+        showStatus("❌ فشل إنشاء الروم، تحقق من الاتصال");
       });
     }
 
     function searchAndJoinRoom() {
       const roomId = document.getElementById("roomCodeInput").value.trim();
-      if (!roomId) return alert("اكتب كود الروم!");
+      if (!roomId) {
+        showStatus("⚠️ أدخل كود الروم أولاً!");
+        return;
+      }
 
+      showStatus("جاري البحث عن الروم...");
       db.ref('rooms/' + roomId).once('value', (snapshot) => {
         if (snapshot.exists()) {
           currentRoomId = roomId;
@@ -355,7 +363,7 @@
 
           enterRoomView(roomId);
         } else {
-          alert("الروم غير موجودة!");
+          showStatus("❌ الروم غير موجودة!");
         }
       });
     }
@@ -378,6 +386,7 @@
       document.getElementById("lobbyScreen").classList.add("hidden");
       document.getElementById("roomScreen").classList.remove("hidden");
       document.getElementById("roomTitle").innerText = "🚪 الغرفة: " + roomId;
+      showStatus("");
 
       if (isUserAdmin) {
         document.getElementById("adminPanel").style.display = "block";
@@ -400,8 +409,8 @@
 
           const avatarEl = document.createElement("div");
           avatarEl.className = "avatar-player";
-          avatarEl.style.top = (10 + (index * 26)) + "px";
-          avatarEl.style.left = "15px"; 
+          avatarEl.style.top = (6 + (index * 22)) + "px";
+          avatarEl.style.left = "10px"; 
           avatarEl.innerHTML = pAvatar + " " + pName;
           arena.appendChild(avatarEl);
           index++;
@@ -446,8 +455,12 @@
     async function uploadAndSend() {
       const fileInput = document.getElementById("fileInput");
       const file = fileInput.files[0];
-      if (!file) return alert("اختر ملف صوت أو فيديو أولاً!");
+      if (!file) {
+        showStatus("⚠️ اختر ملف صوت أو فيديو أولاً!");
+        return;
+      }
 
+      showStatus("جاري رفع الملف...");
       const storageRef = storage.ref('rooms/' + currentRoomId + '/' + Date.now() + '_' + file.name);
       await storageRef.put(file);
       const fileUrl = await storageRef.getDownloadURL();
@@ -457,6 +470,7 @@
         url: fileUrl,
         type: type
       });
+      showStatus("🚀 تم إرسال التحدي للجميع!");
     }
 
     const wheelOptions = [
@@ -479,7 +493,7 @@
           const final = wheelOptions[Math.floor(Math.random() * wheelOptions.length)];
           res.innerText = "🎯 النتيجة: " + final;
         }
-      }, 100);
+      }, 80);
     }
   </script>
 </body>
